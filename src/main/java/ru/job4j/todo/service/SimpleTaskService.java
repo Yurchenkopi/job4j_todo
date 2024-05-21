@@ -1,5 +1,6 @@
 package ru.job4j.todo.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.TaskStore;
@@ -8,13 +9,10 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class SimpleTaskService implements TaskService {
 
     private final TaskStore taskStore;
-
-    public SimpleTaskService(TaskStore taskStore) {
-        this.taskStore = taskStore;
-    }
 
     @Override
     public Optional<Task> add(Task task) {

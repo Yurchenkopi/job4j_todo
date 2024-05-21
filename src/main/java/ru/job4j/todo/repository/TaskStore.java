@@ -3,16 +3,13 @@ package ru.job4j.todo.repository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.Task;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +33,7 @@ public class TaskStore implements Store {
             rsl = Optional.of(task);
         } catch (Exception e) {
             session.getTransaction().rollback();
-            LOG.warn("Объект task не был сохранен в БД по причине возникновения исключения." + e.getMessage(), e);
+            LOG.warn("Объект task не был сохранен в БД по причине возникновения исключения: " + e.getMessage(), e);
         } finally {
             session.close();
         }
@@ -62,6 +59,7 @@ public class TaskStore implements Store {
             rsl = affectedRows > 0;
         } catch (Exception e) {
             session.getTransaction().rollback();
+            LOG.warn("Объект task не был обновлен в БД по причине возникновения исключения: " + e.getMessage(), e);
         } finally {
             session.close();
         }
@@ -91,6 +89,7 @@ public class TaskStore implements Store {
             rsl = affectedRows > 0;
         } catch (Exception e) {
             session.getTransaction().rollback();
+            LOG.warn("Объект task не был обновлен в БД по причине возникновения исключения: " + e.getMessage(), e);
         } finally {
             session.close();
         }
@@ -111,7 +110,7 @@ public class TaskStore implements Store {
             rsl = affectedRows > 0;
         } catch (Exception e) {
             session.getTransaction().rollback();
-            LOG.warn("Объект task не был удален из БД по причине возникновения исключения.");
+            LOG.warn("Объект task не был удален из БД по причине возникновения исключения: " + e.getMessage(), e);
         } finally {
             session.close();
         }
@@ -131,7 +130,7 @@ public class TaskStore implements Store {
             rsl = query.uniqueResultOptional();
         } catch (Exception e) {
             session.getTransaction().rollback();
-            LOG.warn("Возникло исключение при поиске записи в БД по id.");
+            LOG.warn("Возникло исключение при поиске записи в БД по id: " + e.getMessage(), e);
         } finally {
             session.close();
         }
@@ -149,7 +148,7 @@ public class TaskStore implements Store {
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
-            LOG.warn("Возникло исключение при поиске всех записей в БД.");
+            LOG.warn("Возникло исключение при поиске всех записей в БД: " + e.getMessage(), e);
         } finally {
             session.close();
         }
@@ -174,7 +173,7 @@ public class TaskStore implements Store {
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
-            LOG.warn("Возникло исключение при поиске всех записей в БД по фильтру новые.");
+            LOG.warn("Возникло исключение при поиске всех записей в БД по фильтру новые: " + e.getMessage(), e);
         } finally {
             session.close();
         }
@@ -192,7 +191,7 @@ public class TaskStore implements Store {
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
-            LOG.warn("Возникло исключение при поиске записей в БД по фильтру done.");
+            LOG.warn("Возникло исключение при поиске записей в БД по фильтру done: " + e.getMessage(), e);
         } finally {
             session.close();
         }

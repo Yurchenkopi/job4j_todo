@@ -7,6 +7,7 @@
 
     <!-- Bootstrap CSS -->
     <link th:href = "@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script th:src="@{/js/code.jquery.com_jquery-3.7.0.min.js}"></script>
     <script th:src="@{/umd/popper.min.js}"></script>
     <script th:src="@{/js/bootstrap.min.js}"></script>
@@ -17,10 +18,46 @@
 <div class="container-fluid p-0">
     <header th:insert="blocks/header :: header"></header>
     <div class="container mt-2">
-        <h3>Проект <b>todo-list</b> выполнен в рамках курса Job4j</h3>
+        <h5>Описание проекта</h5>
+        <p>Проект выполнен в учебных целях для освоения базовых технологий web.</br>
+            Проект является простым планировщиком задач.<
+        </p>
+        <h6>Приложение позволяет:</br></h6>
         <ul>
-            <li><a th:href="@{/tasks}">Список дел</a></li>
+            <li>Просматривать текущие дела в виде заранее созданного списка задач;</li>
+            <li>Редактировать любую задачу;</li>
+            <li>Присваивать задаче статус "выполнено";</li>
         </ul>
+        <h6>Фильтровать список дел по:</br></h6>
+        <ul>
+            <li>Новые</li>
+            <li>Выполненные</li>
+            <li>Все</li>
+        </ul>
+        <h6>Стек технологий:</br></h6>
+        <ul>
+            <li>Java 17</li>
+            <li>PostgreSQL 14</li>
+            <li>Maven 3.8.5</li>
+            <li>Spring boot 2.7.6</li>
+            <li>Liquibase 4.15.0</li>
+            <li>Hibernate</li>
+            <li>Bootstrap 5.2.3</li>
+        </ul>
+        <h6>Требования к окружению:</br></h6>
+        <ul>
+            <li>Java 17</li>
+            <li>PostgreSQL 14</li>
+            <li>Maven 3.8.5</li>
+        </ul>
+        <div class="row">
+            <div class="col-4">
+                <a class="btn btn-success w-100" th:href="@{/tasks}">Список дел&nbsp;&nbsp;&nbsp;<i class="fa fa-list"></i></a>
+            </div>
+            <div class="col-4">
+                <a class="btn btn-success w-100" th:href="@{/tasks/create}">Добавить задачу&nbsp;&nbsp;&nbsp;<i class="fa fa-plus"></i></a>
+            </div>
+        </div>
     </div>
     <div class="fixed-bottom bg-light">
         <footer th:insert="blocks/footer :: footer"></footer>

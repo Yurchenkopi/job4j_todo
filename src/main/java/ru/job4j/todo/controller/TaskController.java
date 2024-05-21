@@ -4,13 +4,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
-import ru.job4j.todo.model.TaskFilter;
 import ru.job4j.todo.service.TaskFilterService;
 import ru.job4j.todo.service.TaskService;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 @Controller
 @RequestMapping("/tasks")
@@ -118,7 +116,7 @@ public class TaskController {
             return "errors/404";
         }
         var message = String.format(
-                "Задача с id=%s была успешно отредактирована.",
+                "Задача с id=%s добавлена в список дел.",
                 task.getId());
         model.addAttribute("message", message);
         return "messages/message";

@@ -7,10 +7,12 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "tasks")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(of = {"id", "description"})
 public class Task {
     @Id
@@ -22,55 +24,17 @@ public class Task {
     private String description;
 
     @Column(name = "created")
-    public LocalDateTime created = LocalDateTime.now();
-
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MMMM-EEEE-yyyy HH:mm:ss");
+    private LocalDateTime created = LocalDateTime.now();
 
     @Column(name = "done")
     private boolean done;
-
-    public Task() {
-
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
-    }
-
-    public void setDone(boolean done) {
-        this.done = done;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public LocalDateTime getCreated() {
-        return created;
-    }
-
-    public boolean isDone() {
-        return done;
-    }
 
     @Override
     public String toString() {
         return "Task{"
                 + "id=" + id
                 + ", description='" + description + '\''
-                + ", created=" + created.format(FORMATTER)
+                + ", created=" + created
                 + ", done=" + done
                 + '}';
     }
