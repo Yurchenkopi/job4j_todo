@@ -13,26 +13,25 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id", "description"})
+@EqualsAndHashCode(of = {"id", "title"})
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private int id;
 
-    @Column(name = "description")
+    private String title;
+
     private String description;
 
-    @Column(name = "created")
     private LocalDateTime created = LocalDateTime.now();
 
-    @Column(name = "done")
     private boolean done;
 
     @Override
     public String toString() {
         return "Task{"
                 + "id=" + id
+                + ", title='" + title + '\''
                 + ", description='" + description + '\''
                 + ", created=" + created
                 + ", done=" + done

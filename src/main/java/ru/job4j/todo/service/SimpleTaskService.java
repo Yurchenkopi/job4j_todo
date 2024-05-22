@@ -1,18 +1,23 @@
 package ru.job4j.todo.service;
 
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.TaskStore;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.Callable;
 
 @Service
-@AllArgsConstructor
 public class SimpleTaskService implements TaskService {
 
     private final TaskStore taskStore;
+
+    private final Map<Integer, Callable<Collection<Task>>> filtersMap = new HashMap<>();
+
+    public SimpleTaskService(TaskStore taskStore) {
+        this.taskStore = taskStore;
+        init();
+    }
 
     @Override
     public Optional<Task> add(Task task) {
@@ -52,5 +57,25 @@ public class SimpleTaskService implements TaskService {
     @Override
     public Collection<Task> findByDone() {
         return taskStore.findByDone();
+    }
+
+    @Override
+    public Collection<Task> sort(Integer filterId) {
+        Collection<Task> rsl = Collections.emptyList();
+        if (filterId == null) {
+            filterId = 1;
+        }
+        try {
+            rsl = filtersMap.get(filterId).call();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rsl;
+    }
+
+    private void init() {
+        filtersMap.put(1, taskStore::findAll);
+        filtersMap.put(2, taskStore::findByCurrentDate);
+        filtersMap.put(3, taskStore::findByDone);
     }
 }

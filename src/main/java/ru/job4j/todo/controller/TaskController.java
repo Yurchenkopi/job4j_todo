@@ -8,7 +8,6 @@ import ru.job4j.todo.service.TaskFilterService;
 import ru.job4j.todo.service.TaskService;
 
 import java.util.Collection;
-import java.util.Collections;
 
 @Controller
 @RequestMapping("/tasks")
@@ -25,17 +24,7 @@ public class TaskController {
 
     @GetMapping
     public String getAll(@RequestParam(name = "filterId", required = false) Integer filterId, Model model) {
-        Collection<Task> data = Collections.emptyList();
-        if (filterId == null) {
-            filterId = 1;
-        }
-        if (filterId == 1) {
-            data = taskService.findAll();
-        } else if (filterId == 2) {
-            data = taskService.findByCurrentDate();
-        } else if (filterId == 3) {
-            data = taskService.findByDone();
-        }
+        Collection<Task> data = taskService.sort(filterId);
         if (data.isEmpty()) {
             model.addAttribute("message", "Список дел пуст или произошла ошибка при сортировке.");
             return "errors/404";

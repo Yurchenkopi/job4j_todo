@@ -25,8 +25,12 @@
             <div class="row">
                 <div class="col-9">
                     <div class="mb-3">
+                        <label for="description" class="form-label"><b>Название</b></label>
+                        <input type="text" class="form-control" id="title" name="title" th:field="*{title}" placeholder="Укажите название" disabled>
+                    </div>
+                    <div class="mb-3">
                         <label for="description" class="form-label"><b>Описание</b></label>
-                        <textarea class="form-control" id="description" name="description" rows="3" th:field="*{description}" placeholder="Описание..." disabled></textarea>
+                        <textarea class="form-control" id="description" name="description" rows="3" th:field="*{description}" placeholder="Подробное описание задачи" disabled></textarea>
                     </div>
                 </div>
                 <div class="col-3">
@@ -41,8 +45,8 @@
             <div class="row">
                 <div class="col-9">
                     <div class="row">
-                        <div class="col-4"><a class="btn btn-success w-100" th:href="@{/tasks/{id}/makeDone(id=*{id})}">Выполнено</a></div>
-                        <div class="col-4"><a class="btn btn-success w-100" th:href="@{/tasks/{id}/update(id=*{id})}">Редактировать</a></div>
+                        <div class="col-4"><a class="btn btn-success w-100" th:href="@{/tasks/{id}/makeDone(id=*{id})}" th:style="*{done} ? 'display:none;' : ''">Выполнено</a></div>
+                        <div class="col-4"><a class="btn btn-success w-100" th:href="@{/tasks/{id}/update(id=*{id})}" th:style="*{done} ? 'display:none;' : ''">Редактировать</a></div>
                         <div class="col-4"><a class="btn btn-danger w-100" th:href="@{/tasks/{id}/remove(id=*{id})}">Удалить</a></div>
                     </div>
                 </div>

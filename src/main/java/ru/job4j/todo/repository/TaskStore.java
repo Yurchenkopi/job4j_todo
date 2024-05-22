@@ -75,14 +75,10 @@ public class TaskStore implements Store {
             int affectedRows = session.createQuery("""
                     UPDATE Task
                     SET
-                    description = :fDescription,
-                    created = :fCreated,
-                    done = :fDone
+                    description = :fDescription
                     WHERE id = :fId
                     """)
                     .setParameter("fDescription", task.getDescription())
-                    .setParameter("fCreated", task.getCreated())
-                    .setParameter("fDone", task.isDone())
                     .setParameter("fId", task.getId())
                     .executeUpdate();
             session.getTransaction().commit();

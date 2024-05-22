@@ -21,4 +21,6 @@ public interface TaskService {
     Collection<Task> findByCurrentDate();
 
     Collection<Task> findByDone();
+
+    Collection<Task> sort(Integer filterId);
 }
