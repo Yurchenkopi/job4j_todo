@@ -8,6 +8,19 @@
                     <a class="nav-item nav-link" th:href="@{/tasks}">Список дел</a>
                     <a class="nav-item nav-link" th:href="@{/tasks/create}">Добавить задачу</a>
                 </div>
+                <div class="navbar-nav" th:if="${user == null || user.name == 'Гость' || user.id == 0}">
+                    <a class="nav-item nav-link" th:href="@{/users/register}">Регистрация</a>
+                    <a class="nav-item nav-link" th:href="@{/users/login}">Войти</a>
+                </div>
+                <div class="navbar-nav" th:if="${user != null && user.name != 'Гость' && user.id != 0}">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${user.name}"></a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" th:href="@{/users/info}">Личные данные</a></li>
+                        </ul>
+                    </li>
+                    <a class="nav-item nav-link" th:href="@{/users/logout}">Выйти</a>
+                </div>
             </div>
         </div>
     </nav>
