@@ -1,6 +1,8 @@
 package ru.job4j.todo.repository;
 
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.Task;
 
@@ -10,12 +12,19 @@ import java.util.*;
 @Repository
 @AllArgsConstructor
 public class TaskStore implements Store {
+
+    private static final Logger LOG = LoggerFactory.getLogger(TaskStore.class.getName());
     private final CrudRepository crudRepository;
 
     @Override
     public Optional<Task> add(Task task) {
-        crudRepository.run(session -> session.save(task));
-        return Optional.of(task);
+        try {
+            crudRepository.run(session -> session.save(task));
+            return Optional.of(task);
+        } catch (Exception e) {
+            LOG.warn(e.getMessage());
+        }
+        return Optional.empty();
     }
 
     @Override
