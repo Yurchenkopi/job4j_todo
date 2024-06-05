@@ -22,7 +22,7 @@ public class TaskStore implements Store {
             crudRepository.run(session -> session.save(task));
             return Optional.of(task);
         } catch (Exception e) {
-            LOG.warn(e.getMessage());
+            LOG.error(e.getMessage(), e);
         }
         return Optional.empty();
     }
