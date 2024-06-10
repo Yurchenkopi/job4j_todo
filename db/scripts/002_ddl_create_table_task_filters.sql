@@ -1,4 +1,4 @@
-CREATE TABLE task_filters
+CREATE TABLE IF NOT EXISTS task_filters
 (
     id   serial primary key,
     name varchar not null unique
