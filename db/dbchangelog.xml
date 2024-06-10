@@ -9,4 +9,5 @@
     <include file="scripts/002_ddl_create_table_task_filters.sql" relativeToChangelogFile="true"/>
     <include file="scripts/003_dml_insert_task_filters.sql" relativeToChangelogFile="true"/>
     <include file="scripts/004_ddl_create_table_todo_users.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/005_ddl_add_column_tasks.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>
