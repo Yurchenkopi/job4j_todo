@@ -25,7 +25,7 @@
             <div class="row">
                 <div class="col-9">
                     <div class="mb-3">
-                        <label for="description" class="form-label"><b>Название</b></label>
+                        <label for="title" class="form-label"><b>Название</b></label>
                         <input type="text" class="form-control" id="title" name="title" placeholder="Укажите название">
                     </div>
                     <div class="mb-3">
@@ -39,6 +39,12 @@
                         <div class="mt-1 form-switch d-flex align-items-center justify-content-center ">
                             <input type="checkbox" name="done" class="form-check-input" id="done">
                         </div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <label for="priority"><b>Приоритет</b></label>
+                        <select class="form-control mt-3" id="priority" name="priorityId">
+                            <option th:each="priority : ${priorities}" th:value="${priority.id}" th:text="${priority.name}"></option>
+                        </select>
                     </div>
                 </div>
             </div>

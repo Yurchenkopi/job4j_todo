@@ -40,6 +40,10 @@
                             <input type="checkbox" name="status" class="form-check-input" id="status" th:field="*{done}" disabled>
                         </div>
                     </div>
+                    <div class="mt-4 text-center">
+                        <label for="priority" class="form-label"><b>Приоритет</b></label>
+                        <input type="text" class="form-control mt-1" id="priority" name="priorityId" th:field="*{priority.name}" disabled>
+                    </div>
                 </div>
             </div>
             <div class="row">

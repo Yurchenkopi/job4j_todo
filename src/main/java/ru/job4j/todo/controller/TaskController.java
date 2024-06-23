@@ -1,10 +1,12 @@
 package ru.job4j.todo.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskFilterService;
 import ru.job4j.todo.service.TaskService;
 
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Collection;
 
 @Controller
+@AllArgsConstructor
 @RequestMapping("/tasks")
 public class TaskController {
 
@@ -19,10 +22,7 @@ public class TaskController {
 
     private final TaskFilterService taskFilterService;
 
-    public TaskController(TaskService taskService, TaskFilterService taskFilterService) {
-        this.taskService = taskService;
-        this.taskFilterService = taskFilterService;
-    }
+    private final PriorityService priorityService;
 
     @GetMapping
     public String getAll(@RequestParam(name = "filterId", required = false) Integer filterId, Model model) {
@@ -76,16 +76,20 @@ public class TaskController {
             return "errors/404";
         }
         model.addAttribute("task", taskOptional.get());
+        model.addAttribute("priorities", priorityService.findAll());
         return "tasks/edit";
     }
 
     @GetMapping("/create")
-    public String create() {
+    public String create(Model model) {
+        model.addAttribute("priorities", priorityService.findAll());
         return "tasks/new";
     }
 
     @PostMapping("/{id}/update")
-    public String updateTask(@ModelAttribute Task task, Model model) {
+    public String updateTask(@ModelAttribute Task task, @RequestParam(name = "priorityId") Integer priorityId, Model model) {
+        var priority = priorityService.findById(priorityId).orElseThrow(() -> new RuntimeException("Приоритет не найден"));
+        task.setPriority(priority);
         var isUpdated = taskService.update(task);
         if (!isUpdated) {
             model.addAttribute("message", "Не удалось произвести редактирование задачи.");
@@ -99,9 +103,11 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public String createTask(@ModelAttribute Task task, Model model, HttpSession session) {
+    public String createTask(@ModelAttribute Task task, @RequestParam(name = "priorityId") Integer priorityId, Model model, HttpSession session) {
         var user = (User) session.getAttribute("user");
         task.setUser(user);
+        var priority = priorityService.findById(priorityId).orElseThrow(() -> new RuntimeException("Приоритет не найден"));
+        task.setPriority(priority);
         var taskOptional = taskService.add(task);
         if (taskOptional.isEmpty()) {
             model.addAttribute("message", "Не удалось создать новое задание.");

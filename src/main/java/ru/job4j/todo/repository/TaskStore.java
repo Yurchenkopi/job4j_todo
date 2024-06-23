@@ -49,11 +49,13 @@ public class TaskStore implements Store {
                 """
                     UPDATE Task
                     SET
-                    description = :fDescription
+                    description = :fDescription,
+                    priority = :fPriority
                     WHERE id = :fId
                     """,
                 Map.of(
                         "fDescription", task.getDescription(),
+                        "fPriority", task.getPriority(),
                         "fId", task.getId()
                 )
         );
@@ -72,7 +74,7 @@ public class TaskStore implements Store {
     @Override
     public Optional<Task> findById(Integer taskId) {
         return crudRepository.optional(
-                "FROM Task t WHERE t.id = :fId", Task.class,
+                "FROM Task t JOIN FETCH t.priority WHERE t.id = :fId", Task.class,
                 Map.of(
                         "fId", taskId
                 )
@@ -82,7 +84,7 @@ public class TaskStore implements Store {
     @Override
     public Collection<Task> findAll() {
         return crudRepository.query(
-                "FROM Task", Task.class
+                "FROM Task t JOIN FETCH t.priority", Task.class
         );
     }
 
@@ -90,7 +92,7 @@ public class TaskStore implements Store {
     public Collection<Task> findByCurrentDate() {
         return crudRepository.query(
                 """
-            FROM Task
+            FROM Task t JOIN FETCH t.priority
             WHERE created BETWEEN :fStartDateTime AND :fEndDateTime
             """,
                 Task.class,
@@ -104,7 +106,7 @@ public class TaskStore implements Store {
     @Override
     public Collection<Task> findByDone() {
         return crudRepository.query(
-                "FROM Task WHERE done = TRUE", Task.class
+                "FROM Task t JOIN FETCH t.priority WHERE done = TRUE", Task.class
         );
     }
 }
