@@ -87,9 +87,7 @@ public class TaskController {
     }
 
     @PostMapping("/{id}/update")
-    public String updateTask(@ModelAttribute Task task, @RequestParam(name = "priorityId") Integer priorityId, Model model) {
-        var priority = priorityService.findById(priorityId).orElseThrow(() -> new RuntimeException("Приоритет не найден"));
-        task.setPriority(priority);
+    public String updateTask(@ModelAttribute Task task, Model model) {
         var isUpdated = taskService.update(task);
         if (!isUpdated) {
             model.addAttribute("message", "Не удалось произвести редактирование задачи.");
@@ -103,11 +101,9 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public String createTask(@ModelAttribute Task task, @RequestParam(name = "priorityId") Integer priorityId, Model model, HttpSession session) {
+    public String createTask(@ModelAttribute Task task, Model model, HttpSession session) {
         var user = (User) session.getAttribute("user");
         task.setUser(user);
-        var priority = priorityService.findById(priorityId).orElseThrow(() -> new RuntimeException("Приоритет не найден"));
-        task.setPriority(priority);
         var taskOptional = taskService.add(task);
         if (taskOptional.isEmpty()) {
             model.addAttribute("message", "Не удалось создать новое задание.");
