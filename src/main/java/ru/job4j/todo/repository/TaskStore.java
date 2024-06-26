@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Task;
 
 import java.time.LocalDateTime;
@@ -45,21 +46,36 @@ public class TaskStore implements Store {
 
     @Override
     public boolean update(Task task) {
+        return crudRepository.runAndReturnBool(session -> session.merge(task) != null);
+    }
+
+    @Override
+    public boolean updateTaskCategories(Task task, Category category) {
         return crudRepository.runAndReturnBool(
                 """
-                    UPDATE Task
-                    SET
-                    description = :fDescription,
-                    priority = :fPriority
-                    WHERE id = :fId
+                    INSERT INTO categories_tasks(task_id, category_id)
+                    VALUES (:fTaskId, :fCategoryId)
                     """,
                 Map.of(
-                        "fDescription", task.getDescription(),
-                        "fPriority", task.getPriority(),
-                        "fId", task.getId()
+                        "fTaskId", task.getId(),
+                        "fCategoryId", category.getId()
                 )
         );
     }
+
+    @Override
+    public boolean deleteTaskCategories(Task task) {
+        return crudRepository.runAndReturnBool(
+                """
+                    DELETE FROM categories_tasks
+                    WHERE task_id = :fTaskId
+                    """,
+                Map.of(
+                        "fTaskId", task.getId()
+                )
+        );
+    }
+
 
     @Override
     public boolean delete(Integer taskId) {
@@ -74,7 +90,14 @@ public class TaskStore implements Store {
     @Override
     public Optional<Task> findById(Integer taskId) {
         return crudRepository.optional(
-                "FROM Task t JOIN FETCH t.priority WHERE t.id = :fId", Task.class,
+                """
+                SELECT DISTINCT t
+                FROM Task t 
+                JOIN FETCH t.priority 
+                JOIN FETCH t.categories
+                WHERE t.id = :fId
+                ORDER BY t.id ASC
+                """, Task.class,
                 Map.of(
                         "fId", taskId
                 )
@@ -84,7 +107,13 @@ public class TaskStore implements Store {
     @Override
     public Collection<Task> findAll() {
         return crudRepository.query(
-                "FROM Task t JOIN FETCH t.priority", Task.class
+                """
+                        SELECT DISTINCT t
+                        FROM Task t 
+                        JOIN FETCH t.priority
+                        JOIN FETCH t.categories
+                        ORDER BY t.id ASC
+                        """, Task.class
         );
     }
 
@@ -92,8 +121,12 @@ public class TaskStore implements Store {
     public Collection<Task> findByCurrentDate() {
         return crudRepository.query(
                 """
-            FROM Task t JOIN FETCH t.priority
+            SELECT DISTINCT t
+            FROM Task t 
+            JOIN FETCH t.priority
+            JOIN FETCH t.categories
             WHERE created BETWEEN :fStartDateTime AND :fEndDateTime
+            ORDER BY t.id ASC
             """,
                 Task.class,
                 Map.of(
@@ -106,7 +139,14 @@ public class TaskStore implements Store {
     @Override
     public Collection<Task> findByDone() {
         return crudRepository.query(
-                "FROM Task t JOIN FETCH t.priority WHERE done = TRUE", Task.class
+                """
+                        SELECT DISTINCT t
+                        FROM Task t
+                        JOIN FETCH t.priority
+                        JOIN FETCH t.categories
+                        WHERE done = TRUE
+                        ORDER BY t.id ASC
+                        """, Task.class
         );
     }
 }

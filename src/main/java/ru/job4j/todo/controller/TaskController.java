@@ -6,12 +6,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.CategoryService;
 import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskFilterService;
 import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -23,6 +26,8 @@ public class TaskController {
     private final TaskFilterService taskFilterService;
 
     private final PriorityService priorityService;
+
+    private final CategoryService categoryService;
 
     @GetMapping
     public String getAll(@RequestParam(name = "filterId", required = false) Integer filterId, Model model) {
@@ -77,17 +82,22 @@ public class TaskController {
         }
         model.addAttribute("task", taskOptional.get());
         model.addAttribute("priorities", priorityService.findAll());
+        model.addAttribute("categories", categoryService.findAll());
         return "tasks/edit";
     }
 
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("priorities", priorityService.findAll());
+        model.addAttribute("categories", categoryService.findAll());
         return "tasks/new";
     }
 
     @PostMapping("/{id}/update")
-    public String updateTask(@ModelAttribute Task task, Model model) {
+    public String updateTask(@SessionAttribute(name = "user") User user, @ModelAttribute Task task, @RequestParam List<Integer> categoriesId, Model model) {
+        taskService.updateTaskCategories(task, task.getCategories());
+        task.setUser(user);
+        task.setCategories(new ArrayList<>(categoryService.findAllById(categoriesId)));
         var isUpdated = taskService.update(task);
         if (!isUpdated) {
             model.addAttribute("message", "Не удалось произвести редактирование задачи.");
@@ -101,9 +111,10 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public String createTask(@ModelAttribute Task task, Model model, HttpSession session) {
+    public String createTask(@ModelAttribute Task task, @RequestParam List<Integer> categoriesId, Model model, HttpSession session) {
         var user = (User) session.getAttribute("user");
         task.setUser(user);
+        task.setCategories(new ArrayList<>(categoryService.findAllById(categoriesId)));
         var taskOptional = taskService.add(task);
         if (taskOptional.isEmpty()) {
             model.addAttribute("message", "Не удалось создать новое задание.");

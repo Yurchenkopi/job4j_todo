@@ -40,16 +40,23 @@
                     <th scope="col">Дата создания</th>
                     <th scope="col">Имя пользователя</th>
                     <th scope="col">Приоритет</th>
+                    <th scope="col">Категории</th>
                     <th scope="col">Состояние</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="task: ${tasks}" th:href="@{/tasks/{taskId}(taskId=${task.id})}" style="cursor: pointer;">
                     <td th:text="${task.id}"></td>
-                    <td th:if="${#strings.length(task.title) &gt;= 20}" th:text="${#strings.substring(task.description, 0, 20) + '...'}"></td>
-                    <td th:if="${#strings.length(task.title) &lt; 20}" th:text="${task.description}"></td>
+                    <td th:if="${#strings.length(task.title) &gt;= 20}" th:text="${#strings.substring(task.title, 0, 20) + '...'}"></td>
+                    <td th:if="${#strings.length(task.title) &lt; 20}" th:text="${task.title}"></td>
                     <td th:text="${#temporals.format(task.created, 'yyyy-MM-dd HH:mm')}"></td>
                     <td th:text="${task.user.name}"></td>
+                    <td th:text="${task.priority.name}"></td>
+                    <td>
+                        <ul>
+                            <li th:each="category: ${task.categories}" th:text="${category.name}"></li>
+                        </ul>
+                    </td>
                     <td th:text="${task.priority.name}"></td>
                     <td>
                         <span th:if="${task.done}">

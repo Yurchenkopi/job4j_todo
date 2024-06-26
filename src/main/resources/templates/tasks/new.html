@@ -32,6 +32,12 @@
                         <label for="description" class="form-label"><b>Описание</b></label>
                         <textarea class="form-control" id="description" name="description" rows="3" placeholder="Подробное описание задачи"></textarea>
                     </div>
+                    <div class="mb-3">
+                        <label for="categories"><b>Категория</b></label>
+                        <select class="form-control" id="categories" name="categoriesId" multiple required>
+                            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                        </select>
+                    </div>
                 </div>
                 <div class="col-3">
                     <div class="mb-3 text-center">

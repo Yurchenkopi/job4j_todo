@@ -28,6 +28,10 @@ public class CrudRepository {
         );
     }
 
+    public boolean runAndReturnBool(Function<Session, Boolean> function) {
+        return tx(function);
+    }
+
     public void run(String query, Map<String, Object> args) {
         Consumer<Session> command = session -> {
             var sq = session

@@ -1,8 +1,10 @@
 package ru.job4j.todo.service;
 
+import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Task;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface TaskService {
@@ -11,6 +13,8 @@ public interface TaskService {
     boolean update(Integer taskId);
 
     boolean update(Task task);
+
+    boolean updateTaskCategories(Task task, List<Category> categories);
 
     boolean delete(Integer taskId);
 

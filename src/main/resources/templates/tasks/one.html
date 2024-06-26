@@ -32,6 +32,12 @@
                         <label for="description" class="form-label"><b>Описание</b></label>
                         <textarea class="form-control" id="description" name="description" rows="3" th:field="*{description}" placeholder="Подробное описание задачи" disabled></textarea>
                     </div>
+                    <div class="mb-3">
+                        <b>Категория</b>
+                        <ul>
+                            <li th:each="category: ${task.categories}" th:text="${category.name}"></li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="col-3">
                     <div class="mb-3 text-center">
