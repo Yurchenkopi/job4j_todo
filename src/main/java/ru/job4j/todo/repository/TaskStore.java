@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Task;
 
 import java.time.LocalDateTime;
@@ -50,34 +49,6 @@ public class TaskStore implements Store {
     }
 
     @Override
-    public boolean updateTaskCategories(Task task, Category category) {
-        return crudRepository.runAndReturnBool(
-                """
-                    INSERT INTO categories_tasks(task_id, category_id)
-                    VALUES (:fTaskId, :fCategoryId)
-                    """,
-                Map.of(
-                        "fTaskId", task.getId(),
-                        "fCategoryId", category.getId()
-                )
-        );
-    }
-
-    @Override
-    public boolean deleteTaskCategories(Task task) {
-        return crudRepository.runAndReturnBool(
-                """
-                    DELETE FROM categories_tasks
-                    WHERE task_id = :fTaskId
-                    """,
-                Map.of(
-                        "fTaskId", task.getId()
-                )
-        );
-    }
-
-
-    @Override
     public boolean delete(Integer taskId) {
         return crudRepository.runAndReturnBool(
                 "DELETE Task WHERE id = :fId",
@@ -92,8 +63,8 @@ public class TaskStore implements Store {
         return crudRepository.optional(
                 """
                 SELECT DISTINCT t
-                FROM Task t 
-                JOIN FETCH t.priority 
+                FROM Task t
+                JOIN FETCH t.priority
                 JOIN FETCH t.categories
                 WHERE t.id = :fId
                 ORDER BY t.id ASC
@@ -109,7 +80,7 @@ public class TaskStore implements Store {
         return crudRepository.query(
                 """
                         SELECT DISTINCT t
-                        FROM Task t 
+                        FROM Task t
                         JOIN FETCH t.priority
                         JOIN FETCH t.categories
                         ORDER BY t.id ASC
@@ -122,7 +93,7 @@ public class TaskStore implements Store {
         return crudRepository.query(
                 """
             SELECT DISTINCT t
-            FROM Task t 
+            FROM Task t
             JOIN FETCH t.priority
             JOIN FETCH t.categories
             WHERE created BETWEEN :fStartDateTime AND :fEndDateTime

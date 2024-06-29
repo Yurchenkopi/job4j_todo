@@ -1,7 +1,6 @@
 package ru.job4j.todo.service;
 
 import org.springframework.stereotype.Service;
-import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.TaskStore;
 
@@ -36,21 +35,6 @@ public class SimpleTaskService implements TaskService {
     @Override
     public boolean update(Task task) {
         return taskStore.update(task);
-    }
-
-    @Override
-    public boolean updateTaskCategories(Task task, List<Category> categories) {
-        boolean isDeleted = taskStore.deleteTaskCategories(task);
-        boolean isUpdated = false;
-        if (isDeleted) {
-            for (Category category : categories) {
-                isUpdated = taskStore.updateTaskCategories(task, category);
-                if (!isUpdated) {
-                    break;
-                }
-            }
-        }
-        return isDeleted && isUpdated;
     }
 
     @Override

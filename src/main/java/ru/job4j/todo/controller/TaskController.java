@@ -95,7 +95,6 @@ public class TaskController {
 
     @PostMapping("/{id}/update")
     public String updateTask(@SessionAttribute(name = "user") User user, @ModelAttribute Task task, @RequestParam List<Integer> categoriesId, Model model) {
-        taskService.updateTaskCategories(task, task.getCategories());
         task.setUser(user);
         task.setCategories(new ArrayList<>(categoryService.findAllById(categoriesId)));
         var isUpdated = taskService.update(task);
