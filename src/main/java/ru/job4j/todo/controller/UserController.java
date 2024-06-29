@@ -1,29 +1,42 @@
 package ru.job4j.todo.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
+import ru.job4j.todo.controller.utils.TimeZoneLoader;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.beans.PropertyEditorSupport;
 
 @Controller
+@AllArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    private final TimeZoneLoader timeZoneLoader;
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(String.class, "timezone", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                String timezoneValue = timeZoneLoader.getTimeZoneIds().get(Integer.parseInt(text));
+                setValue(timezoneValue);
+            }
+        });
     }
 
     @GetMapping("/register")
-    public String getRegistrationPage() {
+    public String getRegistrationPage(Model model) {
+        var zones = timeZoneLoader.getTimeZoneIds().entrySet();
+        model.addAttribute("timeZoneIds", zones);
         return "users/register";
     }
 

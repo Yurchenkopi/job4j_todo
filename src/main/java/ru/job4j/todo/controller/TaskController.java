@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.todo.controller.utils.TimeZoneConverter;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.CategoryService;
@@ -30,8 +31,15 @@ public class TaskController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public String getAll(@RequestParam(name = "filterId", required = false) Integer filterId, Model model) {
-        Collection<Task> data = taskService.sort(filterId);
+    public String getAll(
+            @RequestParam(name = "filterId", required = false) Integer filterId,
+            Model model,
+            @SessionAttribute(name = "user") User user
+            ) {
+        Collection<Task> data = TimeZoneConverter.convert(
+                taskService.sort(filterId),
+                user
+        );
         if (data.isEmpty()) {
             model.addAttribute("message", "Список дел пуст или произошла ошибка при сортировке.");
             return "errors/404";

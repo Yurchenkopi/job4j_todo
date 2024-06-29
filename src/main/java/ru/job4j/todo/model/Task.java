@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Entity
@@ -24,7 +25,7 @@ public class Task {
 
     private String description;
 
-    private LocalDateTime created = LocalDateTime.now();
+    private LocalDateTime created = LocalDateTime.now(ZoneId.of("UTC"));
 
     private boolean done;
 
